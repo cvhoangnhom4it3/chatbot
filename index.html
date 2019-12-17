@@ -1,0 +1,86 @@
+<html !Doctype>
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auto-center">
+        <h1>Chat bot</h1> 
+        <div class="img" ><img src="rob-botMKII.png" style="width: 10%;"></div> 
+    </div>
+    <div class="main-container">
+        <section>
+            <div class="container">
+                <div class="row card flex-row">
+                    <div class="col">
+                        <div id="chat" class="card-body overflow-auto">
+                            
+                            
+                        </div>
+                        <div class="card-footer bg-secondary">
+                            <form id="form-chat" class="d-flex align-items-center" method="post">
+                                <div class="input-group input-group-lg">
+                                    <!-- <div class="input-group-prepend">
+                                        <button class="btn btn-secondary" type="button">
+                                        <i class="icon-attachment"></i>
+                                        </button>
+                                    </div> -->
+                                    <input class="form-control" type="text" placeholder="Type a message" name="message" id="message" />
+                                </div>
+                                <button class="btn btn-link pr-0">
+                                    <span class="h3">Send</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <!--end of col-->
+                </div>
+                <!--end of row-->
+            </div>
+        </section>
+    </div>
+    <script>
+        $(document).ready(function(){
+            (function($){
+                function processForm( e ){
+                    var receive = '<div class="row justify-content-start"><div class="col-auto"><div class="bg-secondary"><div class="card-body p-2"><p class="mb-0">';
+                    var endReceive = '</p></div></div></div></div>';
+                    var message = $("#message").val();
+                    console.log(message);
+                    var flag = '<div class="row justify-content-end text-right"><div class="col-auto"><div class="bg-primary text-white"><div class="card-body p-2"><p class="mb-0">';
+                    flag += message;
+                    flag += '</p></div></div></div></div>';
+                    $("#chat").append(flag);
+                   // console.log(data);
+                    $.ajax({
+                        url: 'main3.py',
+                        dataType: 'text',
+                        type: 'post',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: $(this).serialize(),
+                        //data: $message,
+                        success: function( data, textStatus, jQxhr ){
+                            var list = data.split(": ");
+                            receive += list[1];
+                            receive += endReceive;
+                            $("#chat").append(receive);
+                            $("#message").val("");
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log( errorThrown );
+                        }
+                    });
+
+                    e.preventDefault();
+                }
+
+                $('#form-chat').submit( processForm );
+            })(jQuery);
+        }); 
+        
+    </script>
+</body>
+</html>
+
